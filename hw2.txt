@@ -1,0 +1,58 @@
+For convert_grammar function, I placed a subfunction that would return a
+list of rules under the same nonterminal. While studying how to make two
+functions call each other, I found out that you can create a subfunction
+that can be called anywhere within the parent function under some restriction.
+Although I could have made the subfunction a helper function, I placed in
+convert_grammar function. Additionally, I had to study more about currying
+function. The subfunction declared and defined in convert_grammar is actually
+a currying function that requires a nonterminal input which we don't have
+it yet; user must input it. I had hard time putting my minds around the new
+concept on currying, but OCaml.org and Youtube came in handy.
+
+For parse_prefix, it took me very long time to figure out the specification.
+I wasn't quite sure what we were returning from parse_prefix. After figuring
+out the returned value must be a matcher function, but it took a while to 
+understand that as well.
+
+After having some ideas on the specification of the homework, I first studied
+about parsing a sample grammar. I created multiple statements using the 
+grammar and paid close attention on parsing to the next children from a node.
+I came across with several important points while tracing the parse tree.
+First is that having left derivation is one of the most important 
+characteristic that I must keep in my mind always. Since I am using matching
+often, being able to compare and use tail recursion easily when desired, this
+characteristic of parsing enable me to write easier method to solve sub-
+problems. Another key aspect was attacking the problem from the start symbol
+to fragments, not the other way around. I first thought about attacking the
+problem from bottom up; however, the professor strongly encouraged us to 
+attack the problem from top down. This led to another key aspect. When a 
+path being evaluated returns None, we may have to start from the beginning.
+Beginning doesn't neccessarily mean from the start symbol, but it could be
+seen as throughing the rule being evaluated away and evaluating the next 
+consecutive rule, if there is one. This also led me to think when evaluating
+the first symbol in a rule, what I should I do with the remaining symbols.
+For example, when A->BC is being evaluated where A, B, and C are nonterminals
+and I am working with B, what I need to do with C was the question.
+During checking whether my code runs or not, I came across with lots of type
+mismatches. Just figuring out what kind of type do I need or I am passing took
+the most of the time in writing the source code. I have mentioned that you
+could call a subfunction anywhere in it parent function under few restrictions.
+One of them was when you have two subfunctions under the same parent function,
+you cannot call the first subfunction listed in second subfunction if those
+two are not connected with "and" keyword to avoid "let". When I first wrote
+two subfunctions where one deals with nonterminals and the other checks whether
+a symbol is a terminal or nonterminal, I made them so that each subfunctions 
+can all each other. Eventually, I only needed one subfunction, but still 
+required "and" keyword.
+
+While testing for the code, I often had to wait for very long time for the 
+program to finish running, but I eventually had to interupt it to quit. The
+pattern I found when the program enters into a unending loop is when
+nonterminals have circular dependency. For example, A->B and B->A where both
+A and B are nonterminals, my code will enter into infinite loop. It cannot
+detect those behavior. Even when A-> B|a where "a" is a terminal and could come
+to the end, the program still enters infinite loop. Of course, A->A|a would do
+the samething to the program. Additionally, I don't think my program to detect
+ambigous grammar. Although we know it should be a left derivation grammar, but
+we may create a grammar that can derive some statements using both right and 
+left derivation and parse_prefix would still accept it. 
